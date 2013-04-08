@@ -10,9 +10,9 @@
  * @author chen1706 <chen1706@gmail.com> 
  * @license New BSD License
  */
-abstract class QingPHP_Exception extends Exception
+class QingPHP_Exception extends Exception
 {    
-    public function __construct(string $message, int $code = 500)
+    public function __construct($message, $code = 500)
     {
         parent::__construct($message, $code);
     }

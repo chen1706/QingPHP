@@ -42,6 +42,11 @@ $config['response']['default'] = 'json';
 $config['response']['allow_format'] = true;
 
 /**
+ * 模板文件扩展名
+ */
+$config['tpl_extention'] = '.html';
+
+/**
  * smarty 模板配置
  */
 $config['smarty']['left_delimiter'] = '<{';

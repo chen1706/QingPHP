@@ -71,6 +71,9 @@ abstract class QingPHP_Controller_Abstract
     public function enableView($flag = true)
     {
         $this->enableView = (bool) $flag;
+        if (!$flag) {
+            $this->view = null;
+        }
     }
 
     /**
@@ -141,7 +144,11 @@ abstract class QingPHP_Controller_Abstract
     public function display($tpl = null)
     {
         //如果$tpl为null 则response (json, seria) 数据
-        $this->view->display($tpl);
+        if ($tpl == null) {
+            $this->getResponse()->response();
+        } else {
+            $this->view->display($tpl);
+        }
     }
 
     /**
@@ -153,6 +160,6 @@ abstract class QingPHP_Controller_Abstract
      */
     public function redirect($url)
     {
-        //head();
+        header('Location: ' . $url);
     }
 }

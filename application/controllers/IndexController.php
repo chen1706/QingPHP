@@ -21,7 +21,7 @@ class IndexController extends QingPHP_Controller_Abstract
 	public function init()
 	{
 		//关闭视图
-		$this->enableView(false);
+		$this->enableView(true);
 	}
 
     /**
@@ -32,11 +32,11 @@ class IndexController extends QingPHP_Controller_Abstract
      */
     public function indexAction()
     {
-        $this->getResponse()->setBody("Hello World");
-        $this->getResponse()->response();
+        //$this->getResponse()->setBody("Hello World");
+        //$this->getResponse()->response();
     	/*$blog = blogModel::instance();
     	$list = $blog->getList();*/
-    	//$this->view->assign('name', 'chen1706');
-    	//$this->view->display('hello.html');    	
+    	$this->view->assign('name', 'chen1706');
+    	$this->view->display('hello');    	
     }
 }

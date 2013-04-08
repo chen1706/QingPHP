@@ -1,5 +1,6 @@
 <?php
 require 'Third/Smarty/Smarty.class.php';
+
 /**
  * QingPHP_View 视图 
  * 
@@ -22,7 +23,7 @@ class QingPHP_View implements QingPHP_View_Interface
      * @access public
      * @return void
      */
-	public function __construct($tplPath = null, $extraParams = array())
+	public function __construct(array $extraParams = array(), $tplPath = null)
 	{
         $this->smarty = new Smarty; 
         foreach ((array) $extraParams as $key => $val) {
@@ -43,8 +44,7 @@ class QingPHP_View implements QingPHP_View_Interface
     public function setViewPath($path)
     {
         if (is_readable($path)) {
-            $this->smarty->template_dir = $path;
-            return;
+            return $this->smarty->template_dir = $path;
         } 
         throw new QingPHP_Exception('Invalid path provided', 500);
     }
@@ -59,7 +59,7 @@ class QingPHP_View implements QingPHP_View_Interface
      */
     public function __set($key, $val)
     {
-        $this->smarty->assign($key, $val);
+        return $this->smarty->assign($key, $val);
     }
 
     /**
@@ -83,7 +83,7 @@ class QingPHP_View implements QingPHP_View_Interface
      */
     public function __unset($key)
     {
-        $this->smarty->clear_assign($key);
+        return $this->smarty->clear_assign($key);
     }
 
     /**
@@ -97,8 +97,7 @@ class QingPHP_View implements QingPHP_View_Interface
     public function assign($spec, $val = null)
     {
         if (is_array($spec)) {
-            $this->smarty->assign($spec);
-            return;
+            return $this->smarty->assign($spec);
         } 
         $this->smarty->assign($spec, $val);
     }
@@ -130,13 +129,14 @@ class QingPHP_View implements QingPHP_View_Interface
     /**
      * display 
      * 
-     * @param mixed $name 
+     * @param mixed $file 
      * @param mixed $value 
      * @access public
      * @return void
      */
-    public function display($name, $value = null)
+    public function display($file, $value = null)
     {
-        echo $this->smarty->fetch($name);
+        $file = $file . QingPHP_Config::instance()->get('tpl_extention');
+        echo $this->smarty->fetch($file);
     }
 }
