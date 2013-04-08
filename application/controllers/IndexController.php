@@ -36,7 +36,8 @@ class IndexController extends QingPHP_Controller_Abstract
         //$this->getResponse()->response();
     	/*$blog = blogModel::instance();
     	$list = $blog->getList();*/
-    	$this->view->assign('name', 'chen1706');
+    	$this->view->assign('username', 'chen1706');
+    	$this->view->assign('cost_time', microtime(true) - START_TIME);
     	$this->view->display('hello');    	
     }
 }
