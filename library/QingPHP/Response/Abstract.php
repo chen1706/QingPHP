@@ -85,6 +85,5 @@ abstract class QingPHP_Response_Abstract
      */
 	public function response()
 	{
-
 	}
 }

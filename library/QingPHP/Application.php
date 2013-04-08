@@ -64,7 +64,8 @@ final class QingPHP_Application
         if (method_exists($controller, $actionName)) {
             $this->runAction($controller, $actionName);
         } else {
-            throw new QingPHP_Application_Exception('Not found \'' . $actionName . '\' action in \'' . $controllerName . '\'');
+            throw new QingPHP_Application_Exception('Not found \'' . $actionName . '\' action in \'' . 
+                $controllerName . '\'');
         }
     }
     

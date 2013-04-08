@@ -10,7 +10,7 @@
  */
 class QingPHP 
 {
-    private static $app = null;
+    private static $application = null;
     
     /**
      * createApp 创建app 
@@ -55,7 +55,7 @@ class QingPHP
      */
     public static function getApplication()
     {        
-        return self::$app;
+        return self::$application;
     }
 
     /**
@@ -68,8 +68,8 @@ class QingPHP
      */
     public static function setApplication($app)
     {
-        if (self::$app === null || $app === null) {
-            QingPHP::$app = $app;
+        if (!isset(self::$application)) {
+            QingPHP::$application = $app;
         } else {
             throw QingPHP_Exception('QingPHP application can only be created once!');
         }
@@ -98,8 +98,6 @@ class QingPHP
         if ($directory) {
             $fileName = $directory . DIRECTORY_SEPARATOR . $fileName;
         }
-
-        include_once $fileName;
-        return true;
+        return include_once $fileName;
     }
 }

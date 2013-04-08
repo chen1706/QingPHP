@@ -45,21 +45,21 @@ abstract class QingPHP_Request_Abstract
 		return $this->action;
 	}
 
-	public function setControllerName($name)
+	public function setControllerName($controllerName)
 	{
-		return $this->controller = $name;
+		return $this->controller = $controllerName;
 	}
 
     /**
      * setActionName 
      * 
-     * @param string $name 
+     * @param string $key 
      * @access public
      * @return void
      */
-	public function setActionName($name)
+	public function setActionName($actionName)
 	{
-		return $this->action = $name;
+		return $this->action = $actionName;
 	}
 
     /**
@@ -76,27 +76,27 @@ abstract class QingPHP_Request_Abstract
     /**
      * getParam 
      * 
-     * @param mixed $name 
+     * @param mixed $key 
      * @param mixed $default 
      * @access public
      * @return void
      */
-	public function getParam($name, $default = null)
+	public function getParam($key, $default = null)
 	{
-
+        return $this->params[$key] ?: $default;
 	}
 
     /**
      * setParam 
      * 
-     * @param mixed $name 
+     * @param mixed $key 
      * @param mixed $val 
      * @access public
      * @return void
      */
-	public function setParam($name, $val)
+	public function setParam($key, $val)
 	{
-
+        return $this->params[$key] = $val;
 	}
 
     /**
@@ -107,18 +107,23 @@ abstract class QingPHP_Request_Abstract
      */
 	public function getMethod()
 	{
-
+        return $this->server('REQUEST_METHOD');
 	}
+
+    public function getRequestUri()
+    {
+        return $this->server('REQUEST_URI');
+    }
 
 	/**
 	 * 抽象方法
 	 */
-	abstract public function query($name);
-	abstract public function post($name);
-	abstract public function get($name);
-	abstract public function server($name);
-	abstract public function cookie($name);
-	abstract public function file($name);
+	abstract public function query($key, $xssClean);
+	abstract public function post($key, $xssClean);
+	abstract public function get($key, $xssClean);
+	abstract public function server($key, $xssClean);
+	abstract public function cookie($key, $xssClean);
+	abstract public function file($key);
 	abstract public function isGet();
 	abstract public function isPost();
 	abstract public function isHead();

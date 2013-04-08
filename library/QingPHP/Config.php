@@ -149,26 +149,21 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 
 	public function rewind()
 	{
-
 	}
 
 	public function key()
 	{
-
 	}
 
 	public function next()
 	{
-
 	}
 
 	public function current()
 	{
-
 	}
 
 	public function valid()
 	{
-
 	}
 }
