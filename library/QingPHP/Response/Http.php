@@ -1,8 +1,26 @@
 <?php
+/**
+ * QingPHP_Response_Http 
+ * 
+ * @uses QingPHP
+ * @uses _Response_Abstract
+ * @final
+ * @package package
+ * @version $Id$
+ * @copyright ©2013
+ * @author chen1706 <chen1706@gmail.com> 
+ * @license New BSD License
+ */
 final class QingPHP_Response_Http extends QingPHP_Response_Abstract
 {
-	protected $code = 200;
+	protected $code = 0;
 
+    /**
+     * response 
+     * 
+     * @access public
+     * @return void
+     */
 	public function response()
 	{
 		/**
@@ -52,12 +70,24 @@ final class QingPHP_Response_Http extends QingPHP_Response_Abstract
 		}
 	}
 
+    /**
+     * responseJson 
+     * 
+     * @access protected
+     * @return void
+     */
 	protected function responseJson()
 	{
 		header('Content-Type: application/json; charset=UTF-8');
 		echo json_encode($this->getInterfaceData());
 	}
 
+    /**
+     * getInterfaceData 
+     * 
+     * @access private
+     * @return void
+     */
 	private function getInterfaceData()
 	{
 		if (0) {

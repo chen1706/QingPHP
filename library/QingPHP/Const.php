@@ -1,4 +1,14 @@
 <?php
+/**
+ * QingPHP_Const const 类 
+ * 
+ * @final
+ * @package package
+ * @version $Id$
+ * @copyright ©2013
+ * @author chen1706 <chen1706@gmail.com> 
+ * @license New BSD License
+ */
 final class QingPHP_Const
 {
 	/**

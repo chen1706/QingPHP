@@ -1,4 +1,16 @@
 <?php
+/**
+ * QingPHP_Config 配置类 
+ * 
+ * @uses Iterator
+ * @uses ArrayAccess
+ * @uses Countable
+ * @package package
+ * @version $Id$
+ * @copyright ©2013
+ * @author chen1706 <chen1706@gmail.com> 
+ * @license New BSD License
+ */
 class QingPHP_Config implements Iterator, ArrayAccess, Countable
 {
 	protected static $instance = null;
@@ -8,6 +20,13 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 	{
 	}
 
+    /**
+     * instance 单例 
+     * 
+     * @static
+     * @access public
+     * @return void
+     */
 	public static function instance()
 	{
 		if(!self::$instance) {
@@ -16,6 +35,13 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 		return self::$instance; 
 	} 
 
+    /**
+     * get 
+     * 
+     * @param mixed $key 
+     * @access public
+     * @return void
+     */
 	public function get($key = null)
 	{
 		if ($key !== null) {
@@ -24,6 +50,13 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 		return null;
 	}
 
+    /**
+     * __get 魔术方法 
+     * 
+     * @param mixed $key 
+     * @access public
+     * @return void
+     */
 	public function __get($key)
 	{
 		if (is_array($this->config[$key])) {
@@ -34,6 +67,13 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 		return $obj;
 	}
 
+    /**
+     * __isset 
+     * 
+     * @param mixed $key 
+     * @access public
+     * @return void
+     */
 	public function __isset($key)
 	{
 		return isset($this->config[$key]);
@@ -44,16 +84,24 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 		return $this->config[$key] = $val;
 	}
 
-	public function __toString()
-	{
-		
-	}
-
+    /**
+     * count 
+     * 
+     * @access public
+     * @return void
+     */
 	public function count()
 	{
 		return count($this->config);
 	}
 
+    /**
+     * offsetGet 
+     * 
+     * @param mixed $key 
+     * @access public
+     * @return void
+     */
 	public function offsetGet($key)
 	{
 		if ($key !== null) {
@@ -62,16 +110,38 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 		return null;
 	}
 
+    /**
+     * offsetSet 
+     * 
+     * @param mixed $key 
+     * @param mixed $val 
+     * @access public
+     * @return void
+     */
 	public function offsetSet($key, $val)
 	{
 		return $this->config[$key] = $val;
 	}
 
+    /**
+     * offsetExists 
+     * 
+     * @param mixed $key 
+     * @access public
+     * @return void
+     */
 	public function offsetExists($key)
 	{
 		return isset($this->config[$key]); 
 	}
 
+    /**
+     * offsetUnset 
+     * 
+     * @param mixed $key 
+     * @access public
+     * @return void
+     */
 	public function offsetUnset($key)
 	{
 		return $this->config[$key] = null;

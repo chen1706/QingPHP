@@ -1,6 +1,23 @@
 <?php
+/**
+ * QingPHP_Application 
+ * 
+ * @final
+ * @package package
+ * @version $Id$
+ * @copyright ©2013
+ * @author chen1706 <chen1706@gmail.com> 
+ * @license New BSD License
+ */
 final class QingPHP_Application
 {
+    /**
+     * __construct 
+     * 
+     * @param array $config 
+     * @access public
+     * @return void
+     */
 	public function __construct(array $config = null)
     {
     	//保存当前应用
@@ -14,7 +31,9 @@ final class QingPHP_Application
 
     /**
      * run 程序执行开始
-     * @return [type] [description]
+     * 
+     * @access public
+     * @return void
      */
     public function run()
     {
@@ -25,6 +44,12 @@ final class QingPHP_Application
         }
     }
 
+    /**
+     * _run 具体执行 
+     * 
+     * @access private
+     * @return void
+     */
     private function _run() 
     {
     	$routerObj = QingPHP_Router::instance();
@@ -43,6 +68,14 @@ final class QingPHP_Application
         }
     }
     
+    /**
+     * runAction 执行action 
+     * 
+     * @param mixed $class 
+     * @param mixed $action 
+     * @access private
+     * @return void
+     */
     private function runAction($class, $action)
     {
         $preRunning = 'preRunning';
@@ -53,9 +86,11 @@ final class QingPHP_Application
     }
 
     /**
-     * configure 设置类属性
-     * @param  [type] $config [description]
-     * @return [type]         [description]
+     * registerConfig 注册配置 
+     * 
+     * @param mixed $config 
+     * @access public
+     * @return void
      */
 	public function registerConfig(&$config) 
     {
@@ -65,6 +100,12 @@ final class QingPHP_Application
         }
 	}
 
+    /**
+     * config 获取当前配置 
+     * 
+     * @access public
+     * @return void
+     */
     public function config()
     {
         return QingPHP_Config::instance();

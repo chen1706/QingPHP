@@ -1,6 +1,24 @@
 <?php
+/**
+ * QingPHP_Request_Http 
+ * 
+ * @uses QingPHP
+ * @uses _Request_Abstract
+ * @package package
+ * @version $Id$
+ * @copyright ©2013
+ * @author chen1706 <chen1706@gmail.com> 
+ * @license New BSD License
+ */
 class QingPHP_Request_Http extends QingPHP_Request_Abstract
 {
+    /**
+     * get get数组 
+     * 
+     * @param mixed $key 
+     * @access public
+     * @return void
+     */
 	public function get($key)
 	{
 		//todo 参数过滤
@@ -18,11 +36,11 @@ class QingPHP_Request_Http extends QingPHP_Request_Abstract
 		return $params;
 	}
 
-	public function query(string $name){}
-	public function post(string $name){}
-	public function server(string $name){}
-	public function cookie(string $name){}
-	public function file(string $name){}
+	public function query($name){}
+	public function post($name){}
+	public function server($name){}
+	public function cookie($name){}
+	public function file($name){}
 	public function isGet(){}
 	public function isPost(){}
 	public function isHead(){}
