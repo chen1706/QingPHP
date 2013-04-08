@@ -13,18 +13,6 @@
 class IndexController extends QingPHP_Controller_Abstract
 {
     /**
-     * init 初始化 
-     * 
-     * @access public
-     * @return void
-     */
-	public function init()
-	{
-		//关闭视图
-		$this->enableView(true);
-	}
-
-    /**
      * indexAction 
      * 
      * @access public
@@ -32,12 +20,8 @@ class IndexController extends QingPHP_Controller_Abstract
      */
     public function indexAction()
     {
-        //$this->getResponse()->setBody("Hello World");
-        //$this->getResponse()->response();
-    	/*$blog = blogModel::instance();
-    	$list = $blog->getList();*/
-    	$this->view->assign('username', 'chen1706');
-    	$this->view->assign('cost_time', microtime(true) - START_TIME);
-    	$this->view->display('hello');    	
+    	$this->assign('username', 'chen1706');
+    	$this->assign('cost_time', microtime(true) - START_TIME);
+    	$this->display('hello');    	
     }
 }

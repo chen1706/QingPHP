@@ -38,7 +38,7 @@ $config['pdo'] = 'mysql://root:@127.0.0.1:3306?dbname=test';
 /**
  * 输出设置
  */
-$config['response']['default'] = 'json';
+$config['response']['default'] = 'html';
 $config['response']['allow_format'] = true;
 
 /**

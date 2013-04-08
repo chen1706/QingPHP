@@ -11,6 +11,16 @@
  */
 final class QingPHP_Const
 {
+    /**
+     * 输出内容格式 html smarty输出
+     */
+    const FT_HTML               = 'html';
+
+    /**
+     * 输出内容格式 xhtml smarty输出
+     */
+    const FT_XHTML              = 'xhtml';
+
 	/**
 	 * ajax的json数据格式输出  
 	 */

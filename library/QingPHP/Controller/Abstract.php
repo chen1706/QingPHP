@@ -11,10 +11,8 @@
  */
 abstract class QingPHP_Controller_Abstract
 {
-	protected $view;
     protected $request;
     protected $response;
-	protected $enableView = true;
 
     /**
      * __construct 构造函数 
@@ -25,9 +23,6 @@ abstract class QingPHP_Controller_Abstract
     public function __construct()
     {
         $this->init();
-        if ($this->enableView) {
-            $this->initView();
-        }
     }
 
     /**
@@ -39,6 +34,8 @@ abstract class QingPHP_Controller_Abstract
     public function init()
     {
         //动态改变初始化哪些内容
+        $this->getRequest();
+        $this->getResponse();
     }
 
     /**
@@ -59,21 +56,6 @@ abstract class QingPHP_Controller_Abstract
      */
     public function postRunning()
     {
-    }
-
-    /**
-     * enableView 是否打开视图 
-     * 
-     * @param mixed $flag 
-     * @access public
-     * @return void
-     */
-    public function enableView($flag = true)
-    {
-        $this->enableView = (bool) $flag;
-        if (!$flag) {
-            $this->view = null;
-        }
     }
 
     /**
@@ -100,38 +82,9 @@ abstract class QingPHP_Controller_Abstract
         return $this->response;
     }
 
-    /**
-     * getView 获取视图对象 
-     * 
-     * @access public
-     * @return void
-     */
-    public function getView()
+    public function assign($key, $val = null, $autoResponse = false)
     {
-        return $this->view;
-    }
-
-    /**
-     * initView 初始化视图 
-     * 
-     * @access public
-     * @return void
-     */
-    public function initView()
-    {
-        $this->view = new QingPHP_View(QingPHP_Config::instance()->get('smarty'));
-    }
-
-    /**
-     * setViewPath 设置视图路径 
-     * 
-     * @param mixed $viewDirectory 
-     * @access public
-     * @return void
-     */
-    public function setViewPath($viewDirectory)
-    {
-        $this->view->setViewPath($viewDirectory);
+        $this->response->setResponse($key, $val, $autoResponse);
     }
 
     /**
@@ -143,12 +96,7 @@ abstract class QingPHP_Controller_Abstract
      */
     public function display($tpl = null)
     {
-        //如果$tpl为null 则response (json, seria) 数据
-        if ($tpl == null) {
-            $this->getResponse()->response();
-        } else {
-            $this->view->display($tpl);
-        }
+        $this->response->display($tpl);
     }
 
     /**

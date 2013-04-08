@@ -136,7 +136,6 @@ class QingPHP_View implements QingPHP_View_Interface
      */
     public function display($file, $value = null)
     {
-        $file = $file . QingPHP_Config::instance()->get('tpl_extention');
         echo $this->smarty->fetch($file);
     }
 }

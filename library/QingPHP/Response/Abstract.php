@@ -11,79 +11,57 @@
  */
 abstract class QingPHP_Response_Abstract
 {
-	protected $body = array();
-	protected $header = array();
+    protected $header = array();
 
     /**
-     * setBody 设置body 
-     * 
-     * @param mixed $body 
-     * @param mixed $name 
-     * @access public
-     * @return void
+     *  输出的内容变量数组
      */
-	public function setBody($body, $name = null)
-	{
-		$this->body = array();
-		return $this->body[] = $body;
-	}
+    protected $response = array();
 
     /**
-     * prependBody 头部追加 
-     * 
-     * @param mixed $body 
-     * @param mixed $name 
-     * @access public
-     * @return void
+     * 只传递给smarty的变量集合 不进行接口输出
      */
-	public function prependBody($body, $name)
-	{
-		return array_unshift($this->body, $body);
-	}
+    protected $autoResponse = array();
+
+    public function setResponse($key, $val = null, $auto = false)
+    {
+        if (func_num_args() == 1) {
+            $this->response = $key;
+        } else {
+            $auto ? $this->autoResponse[$key] = $val : $this->response[$key] = $val;
+        }
+    }
 
     /**
-     * appendBody 尾部追加 
+     * getResponse 获取返回对象
      * 
-     * @param mixed $body 
-     * @param mixed $name 
-     * @access public
-     * @return void
+     * @return mixed
      */
-	public function appendBody($body, $name)
-	{
-		return $this->body[] = $body;
-	}
+    public function getResponse($auto = false)
+    {
+        return $auto ? $this->autoResponse : $this->response;
+    }
 
     /**
-     * clearBody 清除body 
+     * 增加输出的http头
      * 
-     * @param mixed $body 
-     * @access public
+     * @param string $key 
+     * @param string $val 如果为空key可为数组传入
      * @return void
      */
-	public function clearBody($body)
-	{
-		return $this->body = array();
-	}
+    public function setHeader($key, $val = null)
+    {
+        if (func_num_args() == 1) {
+            $this->header = $key;
+        } else {
+            $this->header[$key] = $val;
+        }
+    }
 
-    /**
-     * getBody 获取body 
-     * 
-     * @access public
-     * @return void
-     */
-	public function getBody()
-	{
-		return $this->body;
-	}
+    public function getHeader()
+    {
+        return $this->header;
+    }
 
-    /**
-     * response 输出 
-     * 
-     * @access public
-     * @return void
-     */
-	public function response()
-	{
-	}
+    abstract public function display();
 }
