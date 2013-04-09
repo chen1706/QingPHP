@@ -14,6 +14,7 @@
 final class QingPHP_Response_Http extends QingPHP_Response_Abstract
 {
     private $tplFile = null;
+
     /**
      * response 
      * 
@@ -22,6 +23,7 @@ final class QingPHP_Response_Http extends QingPHP_Response_Abstract
      */
 	public function display($tpl = null)
     {
+        ob_start();
         $this->tplFile = $tpl;
         /** 
          * 如果有设置输出头 则输出
@@ -84,6 +86,8 @@ final class QingPHP_Response_Http extends QingPHP_Response_Abstract
 			default :
 				throw new QingPHP_Exception('output format error' . $format, 500);
 		}
+        ob_end_flush();
+        ob_end_clean();
 	}
 
     /**

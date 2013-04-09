@@ -25,12 +25,29 @@ abstract class QingPHP_Response_Abstract
 
     public function setResponse($key, $val = null, $auto = false)
     {
-        if (func_num_args() == 1) {
-            $this->response = $key;
+        if (func_num_args() == 1 || $val === null) {
+            if (!is_array($this->response)) {
+                $this->response = $key;
+            } else {
+                if (is_array($key)) {
+                    foreach ($key as $k => $v) {
+                        $this->response[$k] = $v; 
+                    }   
+                } else {
+                    $this->response[$key] = $val;
+                }   
+            }   
         } else {
-            $auto ? $this->autoResponse[$key] = $val : $this->response[$key] = $val;
-        }
-    }
+            if (!is_array($this->response)) { 
+                if ($this->response) {
+                    $response = $this->response;
+                    $this->response = array();
+                    $this->response[$response] = null;
+                }   
+            }   
+            $auto ? ((array) $this->autoResponse[$key] = $val) : ((array) $this->response[$key] = $val);
+        }   
+    }   
 
     /**
      * getResponse 获取返回对象

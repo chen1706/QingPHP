@@ -5,6 +5,8 @@
 define('ROOT_PATH', dirname(__DIR__));
 
 $config = array();
+$config['environment'] = $environment;
+
 $config['library_directory'] = ROOT_PATH . '/library/';
 $config['application_directory'] = ROOT_PATH . '/application/';
 $config['controller_directory'] = $config['application_directory'] . '/controllers/';
