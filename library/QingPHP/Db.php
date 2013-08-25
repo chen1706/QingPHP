@@ -1,4 +1,10 @@
 <?php
+/**
+ * QingPHP_Db 
+ * 
+ * @uses PDO
+ * @author chen1706 <chen1706@gmail.com> 
+ */
 final class QingPHP_Db extends PDO
 {
     private $dsn;
@@ -30,6 +36,11 @@ final class QingPHP_Db extends PDO
         }
     }
 
+    /**
+     * getDsn 
+     * 
+     * @return void
+     */
     public function getDsn()
     {
         return $this->dsn;
@@ -48,285 +59,45 @@ final class QingPHP_Db extends PDO
         if (!isset(self::$instances[$dsn])) {
             self::$instances[$dsn] = new self($dsn);
         }
+
         return self::$instances[$dsn];
     }
 
-    public function query($query)
+    /**
+     * 根据变量数组组合sql复制语句, 传递支持的字段参数 $keys数组 和对应的值数组 $vals 返回组合好的sql赋值字段
+     *
+     * @param array $keys
+     * @param array $vals
+     * @static
+     * @access public
+     * @return string
+     */
+    public static function genSqlValueStr($keys, &$vals)
     {
-        $this->queryString = $query;
-        return $this->pdo->query($query);
-    }
-
-    public function exec($query)
-    {
-        $this->queryString = $query;
-        return $this->pdo->exec($query);
-    }
-
-    public function quote($string, $paramtype = NULL)
-    {
-        return $this->pdo->quote($string, $paramtype);
-    }
-
-    protected function arrayQuote(array $array)
-    {
-        $temp = array();
-        foreach ($array as $val) {
-            $temp[] = is_int($val) ? $val : $this->pdo->quote($value);
-        }
-        return implode(',', $temp);
-    }
-
-    protected function innerConjunct($data, $conjunctor, $outerConjunctor)
-    {
-        $haystack = array();
-        foreach ($data as $val) {
-            $haystack[] = '(' . $this->dataImplode($val, $conjunctor) . ')';
-        }
-        return implode($outerConjunctor . ' ', $haystack);
-    }
-
-    protected function dataImplode($data, $conjunctor, $outerConjunctor = null)
-    {
-        $wheres = array();
-        foreach ($data as $key => $val) {
-            if (($key == 'AND' || $key == 'OR') && is_array($val)) {
-                $wheres[] = 0 !== count(array_diff_key($val, array_keys(array_keys($val)))) ?
-                    '(' . $this->dataImplode($val, ' ' . $key) . ')' :
-                    '(' . $this->innerConjunct($val, ' ' . $key, $conjunctor) . ')';
-            } else {
-                preg_match('/([\w]+)(\[(\>|\>\=|\<|\<\=|\!|\<\>)\])?/i', $key, $match);
-                if (isset($match[3])) {
-                    if ($match[3] == '' || $match[3] == '!') {
-                        $wheres[] = $match[1] . ' ' . $match[3] . '= ' . $this->quote($value);
-                    } else {
-                        if ($match[3] == '<>') {
-                            if (is_array($val) && is_numeric($val[0]) && is_numeric($val[1])) {
-                                $wheres[] = $match[1] . ' BETWEEN ' . $val[0] . ' AND ' . $val[1];
-                            }
-                        } else {
-                            if (is_numeric($val)) {
-                                $wheres[] = $match[1] . ' ' . $match[3] . ' ' . $val;
-                            }
-                        }
-                    }
-                } else {
-                    if (is_int($key)) {
-                        $wheres[] = $this->quote($val);
-                    } else {
-                        $wheres[] = is_array($val) ? $match[1] . ' IN (' . $this->arrayQuote($val) . ')' :
-                            $match[1] . ' = ' . $this->quote($val);
-                    }
-                }
+        $columns = array();
+        foreach ($keys as $key) {
+            if (isset($vals[$key])) {
+                $columns[] = '`' . $key . '`=:' .$key;
             }
         }
-        return implode($conjunctor . ' ', $wheres);
+        return implode(',', $columns);
     }
 
-    public function whereClause($where)
+    /**
+     * 给变量绑定数据
+     *
+     * @param string $keys
+     * @param string $vals
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function genBindValue(PDOStatement $sth, $keys, &$vals)
     {
-        $whereClause = '';
-        if (is_array($where)) {
-            $singleCondition = array_diff_key($where, array_flip(
-                array('AND', 'OR', 'GROUP', 'ORDER', 'HAVING', 'LIMIT', 'LIKE', 'MATCH')
-            ));
-            if ($singleCondition != array()) {
-                $whereClause = ' WHERE ' . $this->dataImplode($singleCondition, '');
-            }
-            if (isset($where['AND'])) {
-                $whereClause = ' WHERE ' . $this->dataImplode($where['AND'], ' AND ');
-            }
-            if (isset($where['OR'])) {
-                $whereClause = ' WHERE ' . $this->dataImplode($where['OR'], ' OR ');
-            }
-            if (isset($where['LIKE'])) {
-                $likeQuery = $where['LIKE'];
-                if (is_array($likeQuery)) {
-                    if (isset($likeQuery['OR']) || isset($likeQuery['AND'])) {
-                        $connector = isset($likeQuery['OR']) ? 'OR' : 'AND';
-                        $like_query = isset($likeQuery['OR']) ? $likeQuery['OR'] : $likeQuery['AND'];
-                    } else {
-                        $connector = 'AND';
-                    }
-                    $clauseWrap = array();
-                    foreach ($likeQuery as $column => $keyword) {
-                        if (is_array($keyword)) {
-                            foreach ($keyword as $key) {
-                                $clauseWrap[] = $column . ' LIKE ' . $this->quote('%' . $key . '%');
-                            }
-                        } else {
-                            $clauseWrap[] = $column . ' LIKE ' . $this->quote('%' . $keyword . '%');
-                        }
-                    }
-                    $whereClause .= ($whereClause != '' ? ' AND ' : ' WHERE ') . '(' . implode($clauseWrap, ' ' . $connector . ' ') . ')';
-                }
-            }
-            if (isset($where['MATCH'])) {
-                $matchQuery = $where['MATCH'];
-                if (is_array($matchQuery) && isset($matchQuery['columns']) && isset($matchQuery['keyword'])) {
-                    $whereClause .= ($whereClause != '' ? ' AND ' : ' WHERE ') . ' MATCH (' . implode($matchQuery['columns'], ', ') . ') AGAINST (' . $this->quote($matchQuery['keyword']) . ')';
-                }
-            }
-            if (isset($where['GROUP'])) {
-                $whereClause .= ' GROUP BY ' . $where['GROUP'];
-            }
-            if (isset($where['ORDER'])) {
-                $whereClause .= ' ORDER BY ' . $where['ORDER'];
-                if (isset($where['HAVING'])) {
-                    $whereClause .= ' HAVING ' . $this->dataImplode($where['HAVING'], '');
-                }
-            }
-            if (isset($where['LIMIT'])) {
-                if (is_numeric($where['LIMIT'])) {
-                    $whereClause .= ' LIMIT ' . $where['LIMIT'];
-                }
-                if (is_array($where['LIMIT']) && is_numeric($where['LIMIT'][0]) && is_numeric($where['LIMIT'][1])) {
-                    $where_clause .= ' LIMIT ' . $where['LIMIT'][0] . ',' . $where['LIMIT'][1];
-                }
-            }
-        } else {
-            if ($where != null) {
-                $whereClause .= ' ' . $where;
+        foreach ($keys as $key) {
+            if (isset($vals[$key])) {
+                $sth->bindValue(':' . $key, $vals[$key]);
             }
         }
-
-        return $whereClause;
-    }
-
-    public function select($table, $columns, $where = null) 
-    {
-        if (is_callable($where) && $callback == null) {
-            $callback = $where;
-            $where = '';
-        }
-
-        $query = $this->query('SELECT ' . (
-            is_array($columns) ? implode(', ', $columns) : $columns
-        ) . ' FROM ' . $table . $this->whereClause($where));
-
-        return $query ? $query->fetchAll(
-            (is_string($columns) && $columns != '*') ? PDO::FETCH_COLUMN : PDO::FETCH_ASSOC
-        ) : false;
-    }
-
-    public function insert($table, $data)
-    {
-        $keys = implode(',', array_keys($data));
-        $values = array();
-        foreach ($data as $key => $val) {
-            $values[] = is_array($val) ? serialize($val) : $value;
-        }
-        $this->query('INSERT INTO ' . $table . ' (' . $keys . ') VALUES (' . $this->dataImplode(array_values($values), ',') . ')');
-        return $this->pdo->lastInsertId();
-    }
-
-    public function update($table, $data, $where = null)
-    {
-        $fields = array();
-        foreach ($data as $key => $val) {
-            if (is_array($val)) {
-                $fields[] = $key . '=' . $this->quote(serialize($val));
-            } else {
-                preg_match('/([\w]+)(\[(\+|\-)\])?/i', $key, $match);
-                if (isset($match[3])) {
-                    if (is_numeric($val)) {
-                        $fields[] = $match[1] . ' = ' . $match[1] . ' ' . $match[3] . ' ' . $val;
-                    }
-                } else {
-                    $fields[] = $key . ' = ' . $this->quote($val);
-                }
-            }
-        }        
-        return $this->exec('UPDATE ' . $table . ' SET ' . implode(',', $fields) . $this->whereClause($where));
-    }
-
-    public function delete($table, $where)
-    {
-        return $this->exec('DELETE FROM ' . $table . $this->whereClause($where));
-    }
-
-    public function replace($table, $columns, $search = null, $replace = null, $where = null)
-    {
-        if (is_array($columns)) {
-            $replaceQuery = array();
-            foreach ($columns as $column => $replacements) {
-                foreach ($replacements as $replaceSearch => $replaceReplacement) {
-                    $replaceQuery[] = $column . ' = REPLACE(' . $column . ', ' . $this->quote($replaceSearch) . ', ' . $this->quote($replaceReplacement) . ')';
-                }
-            }
-            $replaceQuery = implode(', ', $replaceQuery);
-            $where = $search;
-        } else {
-            if (is_array($search)) {
-                $replaceQuery = array();
-                foreach ($search as $replaceSearch => $replaceReplacement) {
-                    $replaceQuery[] = $columns . ' = REPLACE(' . $columns . ', ' . $this->quote($replaceSearch) . ', ' . $this->quote($replaceReplacement) . ')';
-                }
-                $replace_query = implode(', ', $replaceQuery);
-                $where = $replace;
-            } else {
-                $replaceQuery = $columns . ' = REPLACE(' . $columns . ', ' . $this->quote($search) . ', ' . $this->quote($replace) . ')';
-            }
-        }
-        return $this->exec('UPDATE ' . $table . ' SET ' . $replaceQuery . $this->whereClause($where));
-    }
-
-    public function get($table, $columns, $where = null)
-    {
-        if (is_array($where)) {
-            $where['LIMIT'] = 1;
-        }
-        $data = $this->select($table, $columns, $where);
-        return isset($data[0]) ? $data[0] : false;
-    }
-
-    public function has($table, $where)
-    {
-        return $this->query('SELECT EXISTS(SELECT 1 FROM ' . $table . $this->whereClause($where) . ')')->fetchColumn() === '1';
-    }
-
-    public function count($table, $where = null)
-    {
-        return 0 + ($this->query('SELECT COUNT(*) FROM ' . $table . $this->whereClause($where))->fetchColumn());
-    }
-
-    public function max($table, $column, $where = null)
-    {
-        return 0 + ($this->query('SELECT MAX(' . $column . ') FROM ' . $table . $this->whereClause($where))->fetchColumn());
-    }
-
-    public function min($table, $column, $where = null)
-    {
-        return 0 + ($this->query('SELECT MIN(' . $column . ') FROM ' . $table . $this->whereClause($where))->fetchColumn());
-    }
-
-    public function avg($table, $column, $where = null)
-    {
-        return 0 + ($this->query('SELECT AVG(' . $column . ') FROM ' . $table . $this->whereClause($where))->fetchColumn());
-    }
-
-    public function sum($table, $column, $where = null)
-    {
-        return 0 + ($this->query('SELECT SUM(' . $column . ') FROM ' . $table . $this->whereClause($where))->fetchColumn());
-    }
-
-    public function error()
-    {
-        return $this->pdo->errorInfo();
-    }
-
-    public function lastQuery()
-    {
-        return $this->queryString;
-    }
-
-    public function version()
-    {
-        return $this->pdo->getAttribute(PDO::ATTR_SERVER_VERSION);
-    }
-
-    public function info()
-    {
-        return $this->pdo->getAttribute(PDO::ATTR_SERVER_INFO);
     }
 }

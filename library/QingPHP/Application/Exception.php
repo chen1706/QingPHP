@@ -11,6 +11,6 @@
  * @author chen1706 <chen1706@gmail.com> 
  * @license New BSD License
  */
-abstract class QingPHP_Application_Exception extends QingPHP_Exception
+class QingPHP_Application_Exception extends QingPHP_Exception
 {    
 }

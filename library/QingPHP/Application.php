@@ -39,7 +39,7 @@ final class QingPHP_Application
     {
         try {
             $this->_run();
-        } catch(QingPHP_Exception $e) {
+        } catch (QingPHP_Exception $e) {
             throw $e;
         }
     }
@@ -52,20 +52,19 @@ final class QingPHP_Application
      */
     private function _run() 
     {
-    	$routerObj = QingPHP_Router::instance();
-        $requestObj = QingPHP_Registry::get('request');
-        $router = $routerObj->route($requestObj);        
-        $controllerName = $router['controller'] . 'Controller';
-        $actionName     = $router['action'] . 'Action';        
-        $controllerClass = ucfirst($controllerName);
+        $request = QingPHP_Registry::get('request');
+        $routerArr = QingPHP_Router::instance()->route($request);        
+        $controller  = $routerArr['controller'] . 'Controller';
+        $action      = $routerArr['action'] . 'Action';        
+        $controllerClass = ucfirst($controller);
         $controller = new $controllerClass;
 
         // 需要采用反射去执行方法
-        if (method_exists($controller, $actionName)) {
-            $this->runAction($controller, $actionName);
+        if (method_exists($controller, $action)) {
+            $this->runAction($controller, $action);
         } else {
-            throw new QingPHP_Application_Exception('Not found \'' . $actionName . '\' action in \'' . 
-                $controllerName . '\'');
+            throw new QingPHP_Application_Exception('Not found \'' . $action . '\' action in \'' . 
+                $controllerClass . '\'');
         }
     }
     
@@ -79,11 +78,9 @@ final class QingPHP_Application
      */
     private function runAction($class, $action)
     {
-        $preRunning = 'preRunning';
-        $class->$preRunning();
+        $class->preRunning();
         $class->$action();
-        $postRunning= 'postRunning';
-        $class->$postRunning();
+        $class->postRunning();
     }
 
     /**

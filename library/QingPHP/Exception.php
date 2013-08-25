@@ -12,18 +12,33 @@
  */
 class QingPHP_Exception extends Exception
 {    
+    /**
+     * __construct 
+     * 
+     * @param mixed $message message 
+     * @param int $code code 
+     * 
+     * @return void
+     */
     public function __construct($message, $code = 500)
     {
         parent::__construct($message, $code);
     }
 
+    /**
+     * showException 
+     * 
+     * @param Exception $e e 
+     * 
+     * @return void
+     */
     public static function showException(Exception $e)
     {
         $trace = '';
         foreach ($e->getTrace() as $key => $val) {
             $str = '<p>';
             $str = 'File: ' . $val['file'] . ' ';
-            $str .= '<strong><font color="#002166">+' . $val['line'] . '</font></strong> ';
+            $str .= '<strong><font color="#ef3f22">+' . $val['line'] . '</font></strong> ';
             $str .= '' . $val['class'] . $val['type'] . $val['function'];
             $str .= '</p>';
             $trace .= $str;
@@ -40,6 +55,7 @@ class QingPHP_Exception extends Exception
 
 function showException($content)
 {
+    $spent = microtime(true) - START_TIME; 
     echo <<<EOF
     <!DOCTYPE html>
     <html>
@@ -104,7 +120,7 @@ function showException($content)
             <div id="body">
                 $content
             </div>
-           <p class="footer">Page rendered exception</p> 
+            <p class="footer">Execute time : $spent</p>
         </div>
     </body>
     </html>

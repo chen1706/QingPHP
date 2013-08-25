@@ -24,8 +24,8 @@ final class QingPHP_Router implements QingPHP_Route_Interface
 	private function __construct()
     {
         $config = QingPHP::getApplication()->config();        
-        $this->defaultController = $config['default_controller'];
-        $this->defaultAction     = $config['default_action'];
+        $this->defaultController = $config['default_c'];
+        $this->defaultAction     = $config['default_a'];
     }
 
     /**
@@ -37,9 +37,10 @@ final class QingPHP_Router implements QingPHP_Route_Interface
      */
     public static function instance()
     {
-        if (!isset(self::$instance)) {
+        if (!isset(self::$instance) || self::$instance === null) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
@@ -52,10 +53,8 @@ final class QingPHP_Router implements QingPHP_Route_Interface
      */
     public function route(QingPHP_Request_Abstract $request)
     {
-        $controller = $request->get('c');
-        $action     = $request->get('a');
-        $controllerName = $controller ?: $this->defaultController;
-        $actionName     = $action ?: $this->defaultAction;
-        return array('controller' => ucfirst(strtolower($controllerName)), 'action' => strtolower($actionName));
+        $action     = $request->get('a') ?: $this->defaultAction;
+        $controller = $request->get('c') ?: $this->defaultController;
+        return array('controller' => ucfirst(strtolower($controller)), 'action' => strtolower($action));
     }
 }

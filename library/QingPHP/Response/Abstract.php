@@ -11,10 +11,13 @@
  */
 abstract class QingPHP_Response_Abstract
 {
+    /**
+     * header 头信息 
+     */
     protected $header = array();
 
     /**
-     *  输出的内容变量数组
+     * 输出的内容变量数组
      */
     protected $response = array();
 
@@ -23,6 +26,15 @@ abstract class QingPHP_Response_Abstract
      */
     protected $autoResponse = array();
 
+    /**
+     * setResponse 
+     * 
+     * @param mixed $key key 
+     * @param mixed $val val 
+     * @param mixed $auto auto 
+     * 
+     * @return void
+     */
     public function setResponse($key, $val = null, $auto = false)
     {
         if (func_num_args() == 1 || $val === null) {
@@ -75,10 +87,22 @@ abstract class QingPHP_Response_Abstract
         }
     }
 
+    /**
+     * getHeader 
+     * 返回header信息 
+     * 
+     * @return void
+     */
     public function getHeader()
     {
         return $this->header;
     }
 
+    /**
+     * display 
+     * 显示 
+     * 
+     * @return void
+     */
     abstract public function display();
 }

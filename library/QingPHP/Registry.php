@@ -26,9 +26,10 @@ class QingPHP_Registry
      */
 	public static function instance()
 	{
-		if (!isset(self::$instance)) {
+		if (!isset(self::$instance) || self::$instance === null) {
 			self::$instance = new self();
 		}		
+
 		return self::$instance;
 	}
 
@@ -56,9 +57,10 @@ class QingPHP_Registry
      */
 	public static function get($name)
 	{
-		if (isset(self::$entries[$name])) {
+		if ($name !== null && isset(self::$entries[$name])) {
 			return self::$entries[$name];
 		}
+
 		return null;
 	}
 

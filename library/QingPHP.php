@@ -1,6 +1,6 @@
 <?php
 /**
- * QingPHP 
+ * QingPHP 主程序 
  * 
  * @package package
  * @version $Id$
@@ -10,6 +10,9 @@
  */
 class QingPHP 
 {
+    /**
+     * app 实例
+     */
     private static $application = null;
     
     /**
@@ -53,9 +56,9 @@ class QingPHP
         set_error_handler('QingPHP::errorHandler', $errorType);
 
         /** 
-         *  注册异常抓捕函数
-         *  当PHP遇到抛出异常的时候，会启动QingPHP::exceptionHandler()
-         *  由于这个函数是个静态函数，所以不需要实例化对象
+         * 注册异常抓捕函数
+         * 当PHP遇到抛出异常的时候，会启动QingPHP::exceptionHandler()
+         * 由于这个函数是个静态函数，所以不需要实例化对象
          */
         set_exception_handler('QingPHP::exceptionHandler');
     }
@@ -112,6 +115,7 @@ class QingPHP
         if ($directory) {
             $fileName = $directory . DIRECTORY_SEPARATOR . $fileName;
         }
+
         return include_once $fileName;
     }
 
@@ -127,17 +131,17 @@ class QingPHP
     {   
         /** 
          *  读取配置文件中的错误日志信息
-         *  如果存在配置文件错误日志信息，则将错误信息交给Mx_Log
+         *  如果存在配置文件错误日志信息，则将错误信息交给QingPHP_Log
          *  如果不存在，则直接输出
          */
         if (ENVIRONMENT == 'development') {
             QingPHP_Exception::showException($exception);
         } else {
             /**
-             * 1.调用Mx_Log::getLogger()，Mx_Log::getLogger()会返回一个logger对象
+             * 1.调用QingPHP_Log::getLogger()，QingPHP_Log::getLogger()会返回一个logger对象
              * 2.调用logger对象的error方法，将错误信息提交给logger，并指定输出格式
              */
-            QingPHP_Log::getLogger()->log("phpexception:code:%d\nmessage:%s\nfile:%s:%d\ntrace:%s", 
+            QingPHP_Log::getLogger()->error("phpexception:code:%d\nmessage:%s\nfile:%s:%d\ntrace:%s", 
                 $exception->getCode(), $exception->getMessage(), $exception->getFile(), $exception->getLine(), 
                 $exception->getTraceAsString());
         }
@@ -159,7 +163,6 @@ class QingPHP
     {
         if (ENVIRONMENT == 'development') {
             $errorStr = sprintf("phperror:\nerrno:%d\nmessage:%s\nfile:%s:%d\n\n", $errno, $errstr, $errfile, $errline);
-            //echo str_replace("\n", '<br />', $errorStr);
         } else {
             if (in_array($errno, array(E_NOTICE, E_USER_NOTICE))) {
                 $level = QingPHP_Log::NOTICE;

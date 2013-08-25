@@ -57,13 +57,13 @@ p.footer{
 </head>
 <body>
     <div id="container">
-        <h1>Welcome to QingPHP <{$username}> !</h1>
+        <h1>Welcome to QingPHP {{$username}} !</h1>
         <div id="body">
             <p>The page you are looking at is being generated dynamically by QingPHP.</p>
             <p>The corresponding controller for this page is found at:</p>
             <code>application/controllers/IndexController.php</code>
         </div>
-        <p class="footer">Page rendered in <strong><{$cost_time}></strong> seconds</p>
+        <p class="footer">Page rendered in <strong>{{$cost_time}}</strong> seconds</p>
     </div>
 </body>
 </html>

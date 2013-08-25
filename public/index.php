@@ -13,3 +13,4 @@ define('START_TIME', microtime(true));
  */
 QingPHP::createApp($config)
     ->run();
+echo microtime(true) - START_TIME;

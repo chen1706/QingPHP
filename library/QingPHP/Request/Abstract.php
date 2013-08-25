@@ -24,42 +24,49 @@ abstract class QingPHP_Request_Abstract
 	}
 
     /**
-     * getControllerName 
+     * getController 
      * 
      * @access public
      * @return void
      */
-	public function getControllerName()
+	public function getController()
 	{
 		return $this->controller;
 	}
 
     /**
-     * getActionName 
+     * getAction 
      * 
      * @access public
      * @return void
      */
-	public function getActionName()
+	public function getAction()
 	{
 		return $this->action;
 	}
 
-	public function setControllerName($controllerName)
+    /**
+     * setController 
+     * 
+     * @param mixed $controller
+     * 
+     * @return void
+     */
+	public function setController($controller)
 	{
-		return $this->controller = $controllerName;
+		return $this->controller = $controller;
 	}
 
     /**
-     * setActionName 
+     * setAction 
      * 
      * @param string $key 
      * @access public
      * @return void
      */
-	public function setActionName($actionName)
+	public function setAction($action)
 	{
-		return $this->action = $actionName;
+		return $this->action = $action;
 	}
 
     /**
@@ -110,6 +117,12 @@ abstract class QingPHP_Request_Abstract
         return $this->server('REQUEST_METHOD');
 	}
 
+    /**
+     * getRequestUri 
+     * 
+     * 
+     * @return void
+     */
     public function getRequestUri()
     {
         return $this->server('REQUEST_URI');

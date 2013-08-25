@@ -1,5 +1,5 @@
 <?php
-require 'Third/Smarty/Smarty.class.php';
+include_once 'Third/Smarty/Smarty.class.php';
 
 /**
  * QingPHP_View 视图 
@@ -23,13 +23,13 @@ class QingPHP_View implements QingPHP_View_Interface
      * @access public
      * @return void
      */
-	public function __construct(array $extraParams = array(), $tplPath = null)
+	public function __construct(array $extraParams = null, $tplPath = null)
 	{
         $this->smarty = new Smarty; 
         foreach ((array) $extraParams as $key => $val) {
             $this->smarty->$key = $val;
         }
-        if ($tplPath != null) {
+        if ($tplPath !== null) {
             $this->setViewPath($tplPath);
         }
     }
@@ -46,6 +46,7 @@ class QingPHP_View implements QingPHP_View_Interface
         if (is_readable($path)) {
             return $this->smarty->template_dir = $path;
         } 
+
         throw new QingPHP_Exception('Invalid path provided', 500);
     }
 

@@ -29,7 +29,7 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
      */
 	public static function instance()
 	{
-		if(!self::$instance) {
+		if (!isset(self::$instance) || self::$instance === null) {
 			self::$instance = new self(); 
 		}
 		return self::$instance; 
@@ -44,9 +44,10 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
      */
 	public function get($key = null)
 	{
-		if ($key !== null) {
+		if ($key !== null && isset($this->config[$key])) {
 			return $this->config[$key];
 		}
+
 		return null;
 	}
 
@@ -64,6 +65,7 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 		} else {
 			$obj = $this->config[$key];
 		}		
+
 		return $obj;
 	}
 
@@ -79,6 +81,14 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
 		return isset($this->config[$key]);
 	}
 
+    /**
+     * set 设置 
+     * 
+     * @param mixed $key key 
+     * @param mixed $val val 
+     * 
+     * @return void
+     */
 	public function set($key, $val)
 	{
 		return $this->config[$key] = $val;
@@ -104,9 +114,10 @@ class QingPHP_Config implements Iterator, ArrayAccess, Countable
      */
 	public function offsetGet($key)
 	{
-		if ($key !== null) {
+		if ($key !== null && isset($this->config[$key])) {
 			return $this->config[$key];
 		}
+
 		return null;
 	}
 

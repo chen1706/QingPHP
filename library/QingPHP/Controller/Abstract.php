@@ -82,6 +82,15 @@ abstract class QingPHP_Controller_Abstract
         return $this->response;
     }
 
+    /**
+     * assign 
+     * 
+     * @param mixed $key key 
+     * @param mixed $val val 
+     * @param mixed $autoResponse autoResponse 
+     * 
+     * @return void
+     */
     public function assign($key, $val = null, $autoResponse = false)
     {
         $this->response->setResponse($key, $val, $autoResponse);
