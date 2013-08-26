@@ -217,15 +217,16 @@ class QingPHP_Request_Http extends QingPHP_Request_Abstract
         return ($this->server('REQUEST_METHOD') === 'OPTIONS');
     }
 
-    /**
-     * xssClean 
-     * 
-     * @param mixed $val val 
-     * 
-     * @return void
-     */
-    private function xssClean($val)
-    {
-        return trim(htmlspecialchars($val));
-    }
+    /**                                                                                                 
+     * xssClean                                                                                         
+     *                                                                                                  
+     * @param mixed $str                                                                                
+     *                                                                                                  
+     * @return void                                                                                     
+     */                                                                                                 
+    private function xssClean($str)                                                                     
+    {                                                                                                   
+        $str = strip_tags(trim($str));
+        return htmlentities($str, ENT_QUOTES);                                                          
+    }        
 }
