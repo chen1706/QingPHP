@@ -20,7 +20,7 @@ $config['default_timezone'] = 'Asia/ShangHai';
  * 默认控制器
  */
 $config['default_c'] = 'Index';
-$config['default_a'] = 'index';
+$config['default_a'] = 'empty';
 
 /**
  * db 数据库配置
@@ -44,12 +44,11 @@ $config['tpl_extention'] = '.html';
 $config['smarty']['left_delimiter']  = '{{';
 $config['smarty']['right_delimiter'] = '}}';
 $config['smarty']['template_dir']    = APP_PATH . 'templates/';
-$config['smarty']['compile_dir']     = APP_PATH . 'templates_c/';
-$config['smarty']['cache_dir']       = APP_PATH . 'templates_d/';
+$config['smarty']['compile_dir']     = CACHE_PATH . 'templates_c/';
 
 /**
  * log 记录
  */
 $config['log']['name'] = 'error_log';                                                  
-$config['log']['write'] = ROOT_PATH . '/cache/log/error.log';                                                
-$config['log']['level'] = 6;                                                              
+$config['log']['write'] = CACHE_PATH . 'log/error.log';                                                
+$config['log']['level'] = 6;                                                 

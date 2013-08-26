@@ -24,4 +24,17 @@ class IndexController extends QingPHP_Controller_Abstract
     	$this->assign('cost_time', microtime(true) - START_TIME);
     	$this->display('hello');    	
     }
+
+    /**
+     * empty 
+     * 默认action
+     *
+     * @return void
+     */
+    public function emptyAction()
+    {
+        $this->assign('username', 'chen1706');
+    	$this->assign('cost_time', microtime(true) - START_TIME);
+    	$this->display('hello');    	
+    }
 }
